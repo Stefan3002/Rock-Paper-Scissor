@@ -1,0 +1,91 @@
+from tkinter import *
+from tkinter import ttk
+import random
+from string import Template as tp
+
+class APP_GUI:
+    def __init__(self,master):
+        self.Options = ttk.Frame(master, relief = 'flat', width = 200, height = 200, padding = (30,15))
+        self.Options.pack()
+
+        self.Options_Title = ttk.Label(self.Options, text = 'Choose your weapon!', font = ('Courier', 45, 'bold'))
+        self.Options_Title.pack()
+
+        self.Paper_Image = PhotoImage(file = r"C:\Users\Stefan\PycharmProjects\Rock-Paper-Scissor\Paper.png").subsample(4,4)
+        self.Rock_Image = PhotoImage(file = r"C:\Users\Stefan\PycharmProjects\Rock-Paper-Scissor\Rock.png").subsample(5,5)
+        self.Scissor_Image = PhotoImage(file = r"C:\Users\Stefan\PycharmProjects\Rock-Paper-Scissor\Scissor.png").subsample(4,4)
+        self.CPU_Image = PhotoImage(file = r"C:\Users\Stefan\PycharmProjects\Rock-Paper-Scissor\CPU.png").subsample(5,5)
+        self.You_Image = PhotoImage(file=r"C:\Users\Stefan\PycharmProjects\Rock-Paper-Scissor\you.png").subsample(8, 8)
+
+        self.Paper_Button = ttk.Button(self.Options, command = lambda x = 'Paper' : self.Handle_Button(x), compound = 'left', image = self.Paper_Image, text = 'Paper!')
+        self.Rock_Button = ttk.Button(self.Options, command = lambda x ='Rock' : self.Handle_Button(x), compound='left', image=self.Rock_Image, text='Rock!')
+        self.Scissor_Button = ttk.Button(self.Options, command = lambda x ='Scissor' : self.Handle_Button(x), compound='left', image=self.Scissor_Image, text='Scissor!')
+
+        self.Paper_Button.pack()
+        self.Rock_Button.pack()
+        self.Scissor_Button.pack()
+
+        self.Output = ttk.Frame(root,width = 200, height = 300, padding = (30,15), relief = 'flat')
+        self.Output.pack()
+
+        self.Outcome = ttk.Label(self.Output, text = '', font = ('Courier', 35, 'bold'))
+        self.Outcome.pack()
+
+        self.Your_Choice = ttk.Label(self.Output,compound = 'left', image =  '', text='', font = ('Courier',20,'underline'))
+        self.CPU_Choice = ttk.Label(self.Output, compound = 'left', image = '', text='', font=('Courier', 20, 'underline'))
+        self.Result = ttk.Label(self.Output, text='', font=('Courier', 40, 'bold', 'italic'))
+
+
+        self.Your_Choice.pack()
+        self.CPU_Choice.pack()
+        self.Result.pack()
+
+    def Handle_Button(self,identifier):
+        self.Result['text'] = ''
+
+        pattern1 = tp('Your weapon: ${your_choice}')
+        pattern2 = tp('CPU\'s weapon: ${cpu_choice}')
+        pattern3 = tp('Result: ${winner} Win!')
+
+        self.Output['relief'] = 'solid'
+        self.Outcome['text'] = 'Outcome:'
+
+        self.Your_Choice['text'] = pattern1.substitute(your_choice = identifier)
+        self.Your_Choice['image'] = self.You_Image
+        number = random.randint(1,3)
+        choices = {1:'Rock',
+                   2:'Paper',
+                   3:'Scissor'}
+        self.CPU_Choice['text'] = pattern2.substitute(cpu_choice = choices[number])
+        self.CPU_Choice['image'] = self.CPU_Image
+
+        CPU = choices[number]
+
+        if identifier == 'Rock' and CPU == 'Scissor':
+            self.Result['text'] = pattern3.substitute(winner = 'You')
+        elif identifier == 'Rock' and CPU == 'Paper':
+            self.Result['text'] = pattern3.substitute(winner = 'CPU')
+        elif identifier == 'Rock' and CPU == 'Rock':
+            self.Result['text'] = pattern3.substitute(winner = 'Nobody')
+
+
+        if identifier == 'Paper' and CPU == 'Scissor':
+            self.Result['text'] = pattern3.substitute(winner = 'CPU')
+        elif identifier == 'Paper' and CPU == 'Paper':
+            self.Result['text'] = pattern3.substitute(winner = 'Nobody')
+        elif identifier == 'Paper' and CPU == 'Rock':
+            self.Result['text'] = pattern3.substitute(winner = 'You')
+
+
+        if identifier == 'Scissor' and CPU == 'Scissor':
+            self.Result['text'] = pattern3.substitute(winner = 'Nobody')
+        elif identifier == 'Scissor' and CPU == 'Paper':
+            self.Result['text'] = pattern3.substitute(winner = 'You')
+        elif identifier == 'Scissor' and CPU == 'Rock':
+            self.Result['text'] = pattern3.substitute(winner = 'CPU')
+
+
+
+root = Tk()
+main_window = APP_GUI(root)
+mainloop()
